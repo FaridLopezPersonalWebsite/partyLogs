@@ -32,8 +32,20 @@ const getPartyById = async (id) => {
 
 // delete party
 const deleteParty = async (id) => {
-  // your code here
+  try {
+    const response = await fetch(`${PARTIES_API_URL}/${id}`, {
+      method: 'DELETE',
+    });
+    if (response.ok) {
+      console.log(`Party with ID ${id} deleted.`);
+    } else {
+      console.error(`Failed to delete party with ID ${id}`);
+    }
+  } catch (error) {
+    console.error(error);
+  }
 };
+
 
 // render a single party by id
 const renderSinglePartyById = async (id) => {
@@ -105,22 +117,27 @@ const renderParties = async (parties) => {
                 <p>${party.date}</p>
                 <p>${party.time}</p>
                 <p>${party.location}</p>
-                <button class="details-button" data-id="${party.id}">See Details</button>
-                <button class="delete-button" data-id="${party.id}">Delete</button>
+                <button class="details-button" type="button" data-id="${party.id}">See Details</button>
+                <button class="delete-button" type="button" data-id="${party.id}">Delete</button>
             `;
       partyContainer.appendChild(partyElement);
 
       // see details
       const detailsButton = partyElement.querySelector('.details-button');
       detailsButton.addEventListener('click', async (event) => {
-        // your code here
+        const partyId = event.target.getAttribute('data-id');
+        await renderSinglePartyById(partyId);
       });
 
       // delete party
       const deleteButton = partyElement.querySelector('.delete-button');
       deleteButton.addEventListener('click', async (event) => {
-        // your code here
-      });
+        const partyId = event.target.getAttribute('data-id');
+        const confirmDelete = confirm('Are you sure you want to delete this party?');
+        if (confirmDelete) {
+        await deleteParty(partyId);
+        partyElement.remove();
+      }});
     });
   } catch (error) {
     console.error(error);
@@ -129,7 +146,12 @@ const renderParties = async (parties) => {
 
 // init function
 const init = async () => {
-  // your code here
+  try {
+    const parties = await getAllParties();
+    renderParties(parties);
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 init();

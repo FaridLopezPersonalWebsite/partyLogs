@@ -3,3 +3,19 @@
     margin: 0;
     box-sizing: border-box;
 }
+
+h1{
+    background-color: olivedrab;
+}
+
+#new-party-form{
+    background-color: red;
+}
+#party-container{
+    background-color: aquamarine;
+}
+
+#button-one{
+    background-color: orange;
+}
+
